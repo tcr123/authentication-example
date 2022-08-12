@@ -47,7 +47,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function checkedLoggedIn(req, res, next) {
-    const loggedIn = true;
+    console.log('Current user is:', req.user);
+    const loggedIn = req.isAuthenticated() && req.user;
     if (!loggedIn) {
         return res.status(401).json({
             err: 'You must log in'
@@ -71,7 +72,10 @@ app.get('/auth/google/callback',
   }
 );
 
-app.get('/auth/logout', (req, res) => {});
+app.get('/auth/logout', (req, res) => {
+    req.logOut();
+    return res.redirect('/');
+});
 
 app.get('/failure', (req, res) => {
     res.send('Failed to authenticate');
